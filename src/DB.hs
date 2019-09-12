@@ -30,7 +30,7 @@ connect session  = do
   Right connection <- Connection.acquire settings
   result <- run (session) connection
   return result
-  where
+  where -- TODO config
     settings = Connection.settings "localhost" 5432 "postgres" "" "graphdb"
 
 runSession :: Session b -> Handler b

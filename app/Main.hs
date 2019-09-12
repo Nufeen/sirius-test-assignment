@@ -6,7 +6,7 @@
 module Main where
 
 import Types
-import DB as DB
+import qualified DB as DB
 
 import Servant
 import Servant.API.Generic (genericApi, ToServantApi, (:-))
@@ -19,24 +19,13 @@ import GHC.Generics (Generic)
 import GHC.Int (Int64)
 
 data Routes route = Routes
-  { _nodes :: route
-    :- "nodes" :> Get '[JSON] [Node]
-  , _node :: route
-    :- "node" :> Capture "id" Int64 :> Get '[JSON] Node
-  , _new ::  route
-    :- "graph" :> "node" :> ReqBody '[JSON] Label :> Put '[JSON] NodeId
-  , _delete :: route
-    :- "graph" :> "node" :> Capture "id" Int64 :> Get '[JSON] Status
-  , _neighbours :: route
-    :- "node" :> Capture "id" Int64 :> "neighbours" :> Get '[JSON] [Node]
-  , _rename :: route
-    :- "graph" :> "node"
-    :> Capture "id" Int64 :> "label" :> ReqBody '[JSON] Label
-    :> Put '[JSON] Status
-  , _connect :: route :- "graph" :> "link"
-    :> Capture "idFrom" Int64
-    :> Capture "idTo" Int64
-    :> Get '[JSON] Status
+  { _nodes :: route :- "nodes" :> Get '[JSON] [Node]
+  , _node :: route :- "node" :> Capture "id" Int64 :> Get '[JSON] Node
+  , _new ::  route :- "graph" :> "node" :> ReqBody '[JSON] Label :> Put '[JSON] NodeId
+  , _delete :: route :- "graph" :> "node" :> Capture "id" Int64 :> Get '[JSON] Status
+  , _neighbours :: route :- "node" :> Capture "id" Int64 :> "neighbours" :> Get '[JSON] [Node]
+  , _rename :: route :- "graph" :> "node" :> Capture "id" Int64 :> "label" :> ReqBody '[JSON] Label :> Put '[JSON] Status
+  , _connect :: route :- "graph" :> "link" :> Capture "idFrom" Int64 :> Capture "idTo" Int64 :> Get '[JSON] Status
   } deriving (Generic)
 
 routes :: Routes AsServer

@@ -2,8 +2,6 @@
 
 Task: https://gist.github.com/qnikst/b50b0cd43bcabad881f3b32371cc9e93
 
-## usage
-
 ### DB
 
 ```
@@ -14,18 +12,18 @@ make pgstop
 make pginit (probably will work on linux, macOS has issues with postgres users)
 ```
 
-Note! In macOS `postgres` user is not created by default. Use something like `CREATE USER postgres WITH SUPERUSER PASSWORD '***'` in `psql`
+**Note!** In macOS `postgres` user is not created by default. Use something like `CREATE USER postgres WITH SUPERUSER PASSWORD '***'` in `psql`
 
-Note! SQL queries use `intarray` (postges > 9.1) extention: https://www.postgresql.org/docs/9.1/intarray.html
+**Note!** SQL queries use `intarray` (postges > 9.1) extention: https://www.postgresql.org/docs/9.1/intarray.html
 
 ### Install/use
 
-Note! `pg_config` should be available for stack build!
+**Note!** `pg_config` should be available for stack build
 
 ```
 stack build
 
-sirius-test-assignment-exe
+stack exec sirius-test-assignment-exe
 ```
 
 or
@@ -52,7 +50,7 @@ curl -X PUT -d '{"label": "add node test"}' -H 'Content-type: application/json' 
 curl -X PUT -d '{"label": "rename  node test"}' -H 'Content-type: application/json' http://127.0.0.1:8081/graph/node/<id>
 ```
 
-# TODO
+## TODO
 
 - app config
 - proper error handling, http://hackage.haskell.org/package/postgresql-error-codes-1.0.1/docs/PostgreSQL-ErrorCodes.html
@@ -83,11 +81,11 @@ https://github.com/haskell-servant/example-servant-minimal/blob/master/src/App.h
 
 https://github.com/haskell-servant/servant-swagger/blob/master/example/src/Todo.hs
 
-## hasql example
+### hasql example
 
 https://github.com/jmackie/servant-example/blob/08924f8a310909f97ad7bd01d3b4326b0d2f33b9/src/Database.hs
 
-## testing
+### testing
 
 http://hackage.haskell.org/package/servant-quickcheck-0.0.7.4/docs/Servant-QuickCheck.html
 
@@ -98,12 +96,13 @@ https://github.com/haskell-servant/servant-swagger/issues/90
 https://github.com/haskell-servant/servant/issues/1015
 
 
-## graph notes
+### graph notes
 
 http://dev.stephendiehl.com/hask/#graphs
 
 
-## Topics to explore
+### Topics to explore
 
--- Generics
--- Data.Functor.Contravariant
+- Generics
+
+- Data.Functor.Contravariant
