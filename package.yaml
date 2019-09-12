@@ -1,0 +1,63 @@
+name:                sirius-test-assignment
+version:             0.1.0.0
+github:              "nufeen/sirius-test-assignment"
+license:             BSD3
+author:              "nufeen"
+maintainer:          "darwin@email.su"
+copyright:           "2019 nufeen"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/nufeen/sirius-test-assignment#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- servant
+- servant-server
+- swagger2
+- servant-swagger
+- aeson
+# - aeson-pretty
+- lens
+# - wai
+- warp
+- hasql
+- contravariant-extras
+- transformers
+- mtl
+- text
+
+library:
+  source-dirs: src
+
+executables:
+  sirius-test-assignment-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -Wall
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - sirius-test-assignment
+
+tests:
+  sirius-test-assignment-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - sirius-test-assignment
