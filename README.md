@@ -9,16 +9,22 @@ make pgstart
 
 make pgstop
 
-make pginit (probably will work on linux, macOS has issues with postgres users)
+make pginit
 ```
 
-**Note!** In macOS `postgres` user is not created by default. Use something like `CREATE USER postgres WITH SUPERUSER PASSWORD '***'` in `psql`
+**Note!**
 
-**Note!** SQL queries use `intarray` (postges > 9.1) extention: https://www.postgresql.org/docs/9.1/intarray.html
+In macOS `postgres` user is not created by default. Use something like `CREATE USER postgres WITH SUPERUSER PASSWORD '***'` in `psql`
+
+**Note!**
+
+SQL queries use `intarray` (postges > 9.1) extention: https://www.postgresql.org/docs/9.1/intarray.html
 
 ### Install/use
 
-**Note!** `pg_config` should be available for stack build
+**Note!**
+
+`pg_config` should be available for stack build
 
 ```
 stack build
@@ -34,11 +40,11 @@ stack ghci / main
 
 ### Test links
 
-Neighbours: http://127.0.0.1:8081/node/<id>/neighbours
+Neighbours: http://127.0.0.1:8081/node/{id}/neighbours
 
-Link: http://127.0.0.1:8081/graph/link/<id>/<id>
+Link: http://127.0.0.1:8081/graph/link/{id}/{id}
 
-Delete: http://127.0.0.1:8081/graph/node/<id>
+Delete: http://127.0.0.1:8081/graph/node/{id}
 
 Swagger: http://127.0.0.1:8081/swagger.json
 
