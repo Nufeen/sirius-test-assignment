@@ -5,8 +5,8 @@ module DB where
 
 import Types
 
-import Servant (Handler, err500, err404)
-import Control.Monad.Except (throwError, liftIO, when)
+import Servant (Handler, err404)
+import Control.Monad.Except (throwError, liftIO)
 import Hasql.Session (Session, statement, run, QueryError)
 import Hasql.Statement (Statement(..))
 import qualified Hasql.Connection as Connection
@@ -77,8 +77,8 @@ deleteNode nId = do
   _ <- liftIO $ removeConnectedFrom nId
   res <- liftIO $ connect $ statement nId s
   case res of
-    Left _ -> throwError err500 -- TODO error handling
-    Right _ -> return $ Status True
+    Left _ -> return $ Err "Failed to delete"
+    Right _ -> return $ Confirm "delete"
   where
     s = Statement query encoder decoder noPrepare
     query = "DELETE FROM nodes WHERE id = $1;"
@@ -98,8 +98,8 @@ renameNode :: Int64 -> Label -> Handler Status
 renameNode nId newLabel = do
   res <- liftIO $ connect $ statement (nId, newLabel) s
   case res of
-    Left _ -> throwError err500 -- TODO
-    Right _ -> return $ Status True
+    Left _ -> return $ Err "Failed to rename. Possible reason: node does not exist"
+    Right _ -> return $ Confirm "rename"
   where
     s = Statement query encoder decoder noPrepare
     query = "UPDATE nodes SET label = $2 WHERE id = $1;"
@@ -110,20 +110,22 @@ renameNode nId newLabel = do
 
 connectNodes :: Int64 -> Int64 -> Handler Status
 connectNodes idFrom idTo = do
-  when (idFrom == idTo) (throwError err500) -- TODO
-  res <- liftIO $ connect $ statement (idFrom, idTo) s
-  case res of
-    Left _ -> throwError err500 -- TODO
-    Right _ -> return $ Status True
-  where
-    s = Statement query encoder decoder noPrepare
-    query =
-      "UPDATE nodes SET relations = CASE \
-         \ WHEN id = $1 THEN uniq((relations || $2::int)::int[]) \
-         \ WHEN id = $2 THEN uniq((relations || $1::int)::int[]) \
-      \ END \
-      \ WHERE id IN ($1, $2)"
-    encoder = contrazip2
-      (E.param $ E.nonNullable E.int8)
-      (E.param $ E.nonNullable E.int8)
-    decoder = noResult
+  if (idFrom == idTo)
+     then (return $ Err "Circular links forbidden")
+  else do
+    res <- liftIO $ connect $ statement (idFrom, idTo) s
+    case res of
+      Left _ -> return $ Err "Failed to connect"
+      Right _ -> return $ Confirm "connect"
+    where
+      s = Statement query encoder decoder noPrepare
+      query =
+        "UPDATE nodes SET relations = CASE \
+           \ WHEN id = $1 THEN uniq((relations || $2::int)::int[]) \
+           \ WHEN id = $2 THEN uniq((relations || $1::int)::int[]) \
+        \ END \
+        \ WHERE id IN ($1, $2)"
+      encoder = contrazip2
+        (E.param $ E.nonNullable E.int8)
+        (E.param $ E.nonNullable E.int8)
+      decoder = noResult

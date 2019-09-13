@@ -6,7 +6,7 @@ module Types where
 import Data.Aeson
 import Data.Swagger
 import Servant.API.Generic
-import Data.Text (Text)
+import Data.Text (Text, unpack)
 import GHC.Int (Int64)
 
 data Node = Node
@@ -39,9 +39,13 @@ instance ToJSON NodeId where
 
 instance ToSchema NodeId
 
-data Status = Status {
-  success :: Bool
-  } deriving (Eq, Show, Generic)
+data Status = Confirm Text | Err Text
+  deriving (Eq, Show, Generic)
 
-instance ToJSON Status
+instance ToJSON Status where
+  toJSON (Confirm t) =
+    object [t .= unpack "success"]
+  toJSON (Err t) =
+    object ["error" .= t]
+
 instance ToSchema Status
