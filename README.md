@@ -53,7 +53,7 @@ Swagger: http://127.0.0.1:8081/swagger.json
 curl -X PUT -d '{"label": "add node test"}' -H 'Content-type: application/json' http://127.0.0.1:8081/graph/node
 
 # Rename node
-curl -X PUT -d '{"label": "rename  node test"}' -H 'Content-type: application/json' http://127.0.0.1:8081/graph/node/<id>
+curl -X PUT -d '{"label": "rename  node test"}' -H 'Content-type: application/json' http://127.0.0.1:8081/graph/node/<id>/label
 ```
 
 ## TODO
