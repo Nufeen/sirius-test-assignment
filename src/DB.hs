@@ -76,14 +76,16 @@ deleteNode :: Int64 -> Handler Status
 deleteNode nId = do
   _ <- liftIO $ removeConnectedFrom nId
   res <- liftIO $ connect $ statement nId s
+  liftIO  $ print res
   case res of
     Left _ -> return $ Err "Failed to delete"
+    Right 0 -> return $ Err "Failed, node does not exist"
     Right _ -> return $ Confirm "delete"
   where
     s = Statement query encoder decoder noPrepare
     query = "DELETE FROM nodes WHERE id = $1;"
     encoder = (E.param $ E.nonNullable E.int8)
-    decoder = noResult
+    decoder = rowsAffected
 
 removeConnectedFrom :: Int64 -> IO (Either QueryError ())
 removeConnectedFrom x = do
@@ -98,7 +100,8 @@ renameNode :: Int64 -> Label -> Handler Status
 renameNode nId newLabel = do
   res <- liftIO $ connect $ statement (nId, newLabel) s
   case res of
-    Left _ -> return $ Err "Failed to rename. Possible reason: node does not exist"
+    Left _ -> return $ Err "Failed to rename"
+    Right 0 -> return $ Err "Node does not exist"
     Right _ -> return $ Confirm "rename"
   where
     s = Statement query encoder decoder noPrepare
@@ -106,7 +109,7 @@ renameNode nId newLabel = do
     encoder = contrazip2
       (E.param $ E.nonNullable E.int8)
       (label >$< (E.param $ E.nonNullable E.text))
-    decoder = noResult
+    decoder = rowsAffected
 
 connectNodes :: Int64 -> Int64 -> Handler Status
 connectNodes idFrom idTo = do
